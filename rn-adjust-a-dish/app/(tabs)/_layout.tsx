@@ -1,59 +1,50 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Tabs } from 'expo-router';
-import { Pressable } from 'react-native';
-
-import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
-import { useClientOnlyValue } from '@/components/useClientOnlyValue';
+import {Tabs} from 'expo-router';
+import {useColorScheme} from '@/components/useColorScheme';
+import {useClientOnlyValue} from '@/components/useClientOnlyValue';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import {useTheme} from "react-native-paper";
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
+    name: React.ComponentProps<typeof FontAwesome>['name'];
+    color: string;
 }) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
+    return <FontAwesome size={28} style={{marginBottom: -3}} {...props} />;
 }
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+    const theme = useTheme()
 
-  return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, true),
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="two"
-        options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-    </Tabs>
-  );
+    return (
+        <Tabs
+            screenOptions={{
+                headerShown: useClientOnlyValue(false, true),
+                headerTintColor: theme.colors.primary,
+                tabBarActiveTintColor: theme.colors.primary
+            }}>
+            <Tabs.Screen
+                name="index"
+                options={{
+                    title: 'Profile',
+                    tabBarIcon: ({color}) => <Ionicons name={"person-circle-outline"} color={color} size={24}/>,
+                }}
+            />
+            <Tabs.Screen
+                name="health"
+                options={{
+                    title: 'Health',
+                    tabBarIcon: ({color}) => <Ionicons name={"heart-circle"} color={color} size={24}/>,
+                }}
+            />
+            <Tabs.Screen
+                name="qr"
+                options={{
+                    title: 'QR',
+                    tabBarIcon: ({color}) => <Ionicons name={"qr-code"} color={color} size={24}/>,
+                }}
+            />
+        </Tabs>
+    );
 }
