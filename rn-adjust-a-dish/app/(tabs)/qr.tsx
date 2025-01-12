@@ -3,20 +3,22 @@ import {Text, useTheme} from "react-native-paper";
 import QRCode from "react-native-qrcode-svg";
 import {useEffect, useState} from "react";
 import {supabase} from "@/lib/supabase";
+import {useIsFocused} from "@react-navigation/native";
 
 export default function qr(){
     const [loading, setLoading] = useState<boolean>(true)
     const [clientHealthConditionIds, setClientHealthConditionIds] = useState<string[]>([])
 
     const theme = useTheme()
+    const isFocused = useIsFocused()
 
     useEffect(() => {
         supabase.auth.getSession().then(({data: {session}}) => {
-            if(session && session.user.id){
+            if(session && session.user.id && isFocused){
                 getClientHealthConditionIds(session.user.id)
             }
         })
-    }, []);
+    }, [isFocused]);
 
     const containerStyle: ViewStyle = {
         ...styles.container,
@@ -31,7 +33,7 @@ export default function qr(){
         )
     }
 
-    if(!clientHealthConditionIds){
+    if(!clientHealthConditionIds.length){
         return(
             <View style={containerStyle}>
                 <Text style={{color:theme.colors.error}} variant={"titleMedium"}>No health conditions found</Text>

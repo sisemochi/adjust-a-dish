@@ -5,6 +5,7 @@ import {supabase} from "@/lib/supabase";
 import {Button, Card, Text, useTheme} from "react-native-paper";
 import {useRouter} from "expo-router";
 import Spacer from "@/components/Spacer";
+import {useIsFocused} from "@react-navigation/native";
 
 type HealthCondition = {
     name?: string,
@@ -17,6 +18,7 @@ export default function TabOneScreen() {
     const [userHealthConditions, setUserHealthConditions] = useState<HealthCondition[]>([])
     const theme = useTheme()
     const router = useRouter()
+    const isFocused = useIsFocused()
 
 
     useEffect(() => {
@@ -30,10 +32,10 @@ export default function TabOneScreen() {
     }, []);
 
     useEffect(() => {
-        if (session) {
+        if (session && isFocused) {
             getUserHealthConditions()
         }
-    }, [session]);
+    }, [session, isFocused]);
 
     useEffect(() => {
         console.log('User health conditions:', userHealthConditions)
@@ -56,13 +58,13 @@ export default function TabOneScreen() {
         <View style={containerStyle}>
             <Text variant={"headlineSmall"} style={{color: theme.colors.onBackground}}>Your health conditions</Text>
             <Spacer height={16}/>
-            {!userHealthConditions ? (
+            {!userHealthConditions.length ? (
                 <View style={{gap:8}}>
                     <Text style={{color:theme.colors.error}}>No health conditions found</Text>
                     <Button mode={'contained'} onPress={()=>{
                         router.navigate("/health")
                     }}>
-                        <Text>Go to health</Text>
+                        Go to health
                     </Button>
                 </View>
             ) : (
