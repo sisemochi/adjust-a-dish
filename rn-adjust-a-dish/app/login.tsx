@@ -42,7 +42,7 @@ export default function login(){
       <Text variant={"headlineLarge"} style={styles.text}>Welcome!</Text>
       <Spacer height={32}/>
       
-      <TextInput mode={'outlined'} value={email} onChangeText={setEmail} label={"Email"}/>
+      <TextInput mode={'outlined'} value={email} onChangeText={setEmail} label={"Email"} autoCapitalize={"none"}/>
       <Spacer height={16}/>
       <TextInput mode={'outlined'} value={password} onChangeText={setPassword} secureTextEntry={true} label={"Password"}/>
       
