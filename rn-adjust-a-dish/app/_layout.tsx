@@ -70,6 +70,8 @@ function RootLayoutNav() {
                 <Stack.Screen name="register" options={{headerBackTitle: "Back", title: "Sign up"}}/>
                 <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
                 <Stack.Screen name="modal" options={{presentation: 'modal'}}/>
+                <Stack.Screen name="kitchen" options={{headerShown: false}}/>
+                <Stack.Screen name="server" options={{headerShown: false}}/>
             </Stack>
         </ThemeProvider>
     );

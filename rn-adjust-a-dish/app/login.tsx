@@ -22,20 +22,43 @@ export default function login(){
 
   async function signInWithEmail() {
     setLoading(true)
-    const { error } = await supabase.auth.signInWithPassword({
+    const { error, data: {session} } = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
     })
 
-    if (error) {
+    if (error || !session) {
       Alert.alert(error.message)
     }
     else{
-      router.navigate('./(tabs)')
+      //navigate based on role
+      //1. Get profile and role
+
+      const {data} = await  supabase.from('profiles').select('role').eq('id', session.user.id).single()
+
+      if(!data){
+        Alert.alert("No profile found")
+        return
+      }
+
+      //2. Navigate to the correct screen
+      if(data.role === 'client' || data.role === "") {
+        console.log("client role")
+        router.navigate('./(tabs)')
+      }
+      if(data.role === 'server'){
+        console.log("server role")
+        router.navigate('/server')
+      }
+      if(data.role === 'kitchen'){
+        console.log("kitchen role")
+        router.navigate('/kitchen')
+      }
     }
     setLoading(false)
   }
-  
+
+
   return (
     <View style={styles.container}>
       <Spacer height={96}/>

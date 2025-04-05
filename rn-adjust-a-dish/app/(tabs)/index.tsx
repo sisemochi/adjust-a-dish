@@ -80,6 +80,8 @@ export default function TabOneScreen() {
             setLoading(true);
             if (!session?.user) throw new Error('No user on the session!');
 
+            console.log(session.user.id)
+
             const { data, error } = await supabase
                 .from('client_health_conditions')
                 .select('health_conditions(name, description)')
