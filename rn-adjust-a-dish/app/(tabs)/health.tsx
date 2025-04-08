@@ -156,30 +156,38 @@ export default function health() {
     }
 
     async function getUserHealthConditions() {
+        setLoading(true);
+
+        if (!session?.user) {
+            console.error("No user on the session!");
+            setLoading(false);
+            return;
+        }
+
         try {
-            setLoading(true);
-            if (!session?.user) throw new Error('No user on the session!');
+            const { data, error } = await supabase
+              .from('client_health_conditions')
+              .select('health_conditions(id, name, description)')
+              .eq('client_id', session.user.id);
 
-            const {data, error} = await supabase
-                .from('client_health_conditions')
-                .select('health_conditions(id, name, description)')
-                .eq('client_id', session.user.id);
-
-            if (error) throw error;
+            if (error) {
+                console.error('Error fetching user health conditions:', error);
+                return;
+            }
 
             if (data) {
-                // Flatten and map to HealthCondition[]
                 const healthConditions = data
-                    .map(item => item.health_conditions)
-                    .filter(condition => condition); // Ensure no null or undefined
+                  .map(item => item.health_conditions)
+                  .filter(Boolean);
 
                 setUserHealthConditions(healthConditions as HealthCondition[]);
             }
-        } catch (error) {
-            console.error('Error fetching user health conditions:', error);
+        } catch (err) {
+            console.error('Error fetching user health conditions:', err);
         } finally {
             setLoading(false);
         }
     }
+
 
 }
